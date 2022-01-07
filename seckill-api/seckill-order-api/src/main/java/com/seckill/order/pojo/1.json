@@ -1,0 +1,29 @@
+{
+  "flag": true,
+  "code": 20000,
+  "message": "查询成功",
+  "data": {
+    "id": "No1310765889452253184",
+    "totalNum": 1,
+    "payType": null,
+    "createTime": "2020-09-29 02:18",
+    "updateTime": "2020-09-29T02:18:35.000+0000",
+    "payTime": null,
+    "consignTime": null,
+    "endTime": null,
+    "closeTime": null,
+    "receiverContact": null,
+    "receiverMobile": null,
+    "receiverAddress": null,
+    "transactionId": null,
+    "orderStatus": "0",
+    "payStatus": "0",
+    "consignStatus": "0",
+    "isDelete": null,
+    "skuId": "S1235451589041356800",
+    "name": "Haier海尔 EC-MG(U)热水器电家用升速热卫生间储水洗澡电热水器 EC-MG(U) 25KG 2500W功耗 电热水器 50升",
+    "price": 1589,
+    "username": "itheima",
+    "sku": null
+  }
+}
