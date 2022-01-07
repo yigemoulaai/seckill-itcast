@@ -1,0 +1,59 @@
+{
+  "flag": true,
+  "code": 20000,
+  "message": "查询成功",
+  "data": [
+    {
+      "id": "No1310851881148375040",
+      "name": "16:00",
+      "status": 1,
+      "startdate": "2020-09-29T00:00:00.000+0800",
+      "begintime": "2020-09-29 16:00:01",
+      "endtime": "2020-09-29 18:00:01",
+      "totalTime": null,
+      "isDel": null,
+      "timeId": null,
+      "seckillTime": null,
+      "seckillTimeList": null
+    },
+    {
+      "id": "No1310851895870382080",
+      "name": "18:00",
+      "status": 1,
+      "startdate": "2020-09-29T00:00:00.000+0800",
+      "begintime": "2020-09-29 18:00:00",
+      "endtime": "2020-09-29 20:00:00",
+      "totalTime": null,
+      "isDel": null,
+      "timeId": null,
+      "seckillTime": null,
+      "seckillTimeList": null
+    },
+    {
+      "id": "No1310851908893696000",
+      "name": "20:00",
+      "status": 1,
+      "startdate": "2020-09-29T00:00:00.000+0800",
+      "begintime": "2020-09-29 20:00:00",
+      "endtime": "2020-09-29 22:00:00",
+      "totalTime": null,
+      "isDel": null,
+      "timeId": null,
+      "seckillTime": null,
+      "seckillTimeList": null
+    },
+    {
+      "id": "No1310851923456319488",
+      "name": "22:00",
+      "status": 1,
+      "startdate": "2020-09-29T00:00:00.000+0800",
+      "begintime": "2020-09-29 22:00:01",
+      "endtime": "2020-09-30 00:00:01",
+      "totalTime": null,
+      "isDel": null,
+      "timeId": null,
+      "seckillTime": null,
+      "seckillTimeList": null
+    }
+  ]
+}

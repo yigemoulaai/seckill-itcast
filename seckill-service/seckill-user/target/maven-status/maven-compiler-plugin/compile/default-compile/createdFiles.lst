@@ -1,0 +1,5 @@
+com\seckill\user\controller\UserController.class
+com\seckill\UserApplication.class
+com\seckill\user\dao\UserMapper.class
+com\seckill\user\service\impl\UserServiceImpl.class
+com\seckill\user\service\UserService.class

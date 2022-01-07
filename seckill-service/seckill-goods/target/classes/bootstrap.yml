@@ -1,0 +1,50 @@
+server:
+  port: 18081
+spring:
+  jackson:
+    time-zone: GMT+8
+  application:
+    name: seckill-goods
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db-server:3306/seckill_goods?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: li19990424
+  cloud:
+    inetutils:
+      preferred-networks: 125.81
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: nacos-server:8848
+      discovery:
+        #Nacos的注册地址
+        server-addr: nacos-server:8848
+      # alibaba:
+      # seata:
+      #  tx-service-group: seata_seckill_transaction
+  main:
+    allow-bean-definition-overriding: true
+  redis:
+    host: redis-server
+    port: 6377
+  elasticsearch:
+    rest:
+      uris: ["http://111.229.8.28:9200"]
+logging:
+  level:
+    #root: debug开启dubug级别
+    com.seckill.goods.dao: error
+  pattern:
+    console: "%msg%n"
+
+#elaticjob
+elaticjob:
+  zookeeper:
+    server-lists: zk-server:2181
+    # 定时任务命名空间
+    namespace: updatetask
+
+#动态定时任务案例
+zkserver: zk-server:2181
+zknamespace: zknamesp
