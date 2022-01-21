@@ -1,4 +1,4 @@
-# -seckill-itcast
+#  seckill-itcast
 2020秒杀  分布式项目 技术包括：redis kafka canal nginx Spring Cloud
 开发环境: Elasticsearch 6.2.4 Kafka 2.12-2.5 redis 6.2.3 zookeeper 3.5.6
 ##  开发文档及 DB.sql  在 dev_doc
@@ -26,3 +26,4 @@
   1.2 
   
 ##  视频同步更新中 
+#### uri： https://www.bilibili.com/video/BV1RR4y1u7Ls
