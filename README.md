@@ -58,15 +58,15 @@ Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
           2. 其中修改商品的秒杀时间，并标记为秒杀商品，将这些修改后的Sku的信息保存至mysql
           3. 把修改后的Sku和SkuAct建立起关联
      + L3 Task 定时任务处理逻辑 task(String jobName, Long time, String id)
-        + M1 添加动态定时任务 addDynamicTask cron表达式  {Seconds} {Minutes} 
-        {Hours} {DayofMonth} {Month} {DayofWeek} {Year}  
-        */10 * * * * ? 每隔10秒执行一次  0 */5 * * * ? 每隔5分钟执行一次
+        + M1 添加动态定时任务 addDynamicTask cron表达式  
+        {Seconds} {Minutes}{Hours} {DayofMonth} {Month} {DayofWeek} {Year}  
+        */10 * * * * ? 每隔10秒执行一次  
         添加一个动态任务,以当前系统时间+ 等待时间转换为cron表达式  
-            + 测试任务的逻辑
-            1. 删除所有活动和所有时间以及活动商品信息, 批量加入secTime的集合
-            2. 对每个sekTime创建一个秒杀Activity,每个Sku->SkuAct是多对一，关联关系为行数据的关联  
+        + 测试任务的逻辑
+           1. 删除所有活动和所有时间以及活动商品信息, 批量加入secTime的集合
+           2. 对每个sekTime创建一个秒杀Activity,每个Sku->SkuAct是多对一，关联关系为行数据的关联  
             同时要修改SKU的商品价格以及状态，以及增加静态资源和下游逻辑。
-            3. 这里没有体现动态定时任务，只是初始化了秒杀的活动表
+           3. 这里没有体现动态定时任务，只是初始化了秒杀的活动表
       + L4 Activity 活动的处理逻辑
         + M1 Activity的上线/下线 isUp(id,isup)  
         主要修改Activity表中的数据的Status字段 
