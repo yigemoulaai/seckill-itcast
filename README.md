@@ -1,10 +1,10 @@
-#  seckill-itcast
-## 描述
-#### 2020秒杀  分布式项目 技术包括：elasticsearch redis kafka canal Nginx  
+#  分布式秒杀平台
+##  开发文档及 DB.sql  在 dev_doc
+#### 描述：
+分布式项目,技术包括：elasticsearch redis kafka canal Nginx  
  
 #### Dev environment: 
 Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
-##  开发文档及 DB.sql  在 dev_doc
 ### 第一章内容  （文档完整）
     1 module seckill-api
    
