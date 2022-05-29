@@ -1,6 +1,6 @@
 #  seckill-itcast
 ## 描述
-#### 2020秒杀  分布式项目 技术包括：redis kafka canal Nginx  
+#### 2020秒杀  分布式项目 技术包括：elasticsearch redis kafka canal Nginx  
  
 #### Dev environment: 
 Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
