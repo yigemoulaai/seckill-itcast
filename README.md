@@ -6,19 +6,19 @@
 Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
 ##  开发文档及 DB.sql  在 dev_doc
 ### 第一章内容  （文档完整）
-  1 module seckill-api
+    1 module seckill-api
    
-  2 module seckill-module
+    2 module seckill-module
   
-  3 module seckill-service
+    3 module seckill-service
     
-   3.1 seckill-user  
+    3.1 seckill-user  
    
-   3.2 seckill-search
+    3.2 seckill-search
    
-   3.3 seckill-canal
+    3.3 seckill-canal
    
-   3.4 seckill-goods
+    3.4 seckill-goods
 ### 第二章内容 (seckill-Goods ) 
    
 + L1 Sku处理逻辑  
