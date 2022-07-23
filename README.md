@@ -50,14 +50,14 @@ Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
           private SeckillTime seckillTime;
           private List<SeckillTime> seckillTimeList;
      ``` 
-    + L2 SkuAct 秒杀活动处理逻辑
-        + M1  修改秒杀活动 update(SkuAct skuAct,String id)
++ L2 SkuAct 秒杀活动处理逻辑
+    + M1  修改秒杀活动 update(SkuAct skuAct,String id)
         
-        + M2  新增商品秒杀活动 add(SkuAct skuAct)
-          1. 根据skuAct.activityId查询所有的SkuAct中的所有sku商品,在Activity表中查询秒杀起始和终止时间  
-          2. 其中修改商品的秒杀时间，并标记为秒杀商品，将这些修改后的Sku的信息保存至mysql
-          3. 把修改后的Sku和SkuAct建立起关联
-     + L3 Task 定时任务处理逻辑 task(String jobName, Long time, String id)
+    + M2  新增商品秒杀活动 add(SkuAct skuAct)
+       1. 根据skuAct.activityId查询所有的SkuAct中的所有sku商品,在Activity表中查询秒杀起始和终止时间  
+       2. 其中修改商品的秒杀时间，并标记为秒杀商品，将这些修改后的Sku的信息保存至mysql
+       3. 把修改后的Sku和SkuAct建立起关联
+    + L3 Task 定时任务处理逻辑 task(String jobName, Long time, String id)
         + M1 添加动态定时任务 addDynamicTask cron表达式  
         {Seconds} {Minutes}{Hours} {DayofMonth} {Month} {DayofWeek} {Year}  
         */10 * * * * ? 每隔10秒执行一次  
@@ -67,14 +67,19 @@ Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
            2. 对每个sekTime创建一个秒杀Activity,每个Sku->SkuAct是多对一，关联关系为行数据的关联  
             同时要修改SKU的商品价格以及状态，以及增加静态资源和下游逻辑。
            3. 这里没有体现动态定时任务，只是初始化了秒杀的活动表
-      + L4 Activity 活动的处理逻辑
+    + L4 Activity 活动的处理逻辑
         + M1 Activity的上线/下线 isUp(id,isup)  
         主要修改Activity表中的数据的Status字段 
         + M2 新增一个Activity 
             1. 这里注入了分布式自增id(idWorker),作为唯一性id字段等,设置开始和结束时间  
             2. 插入数据库
-### 第三章内容(seckill-Order ) 
-+ L1 Sku处理逻辑  
+### 第三章内容(seckill-Order )  
++ L1 Sku处理逻辑   （修改日期 20220723）
+    + M1 /hotSec/{id} 接受秒杀id
+        1. 查询是否已经秒杀过该商品,若没有则生成分布式锁
+        2. 查询redis中的库存,如果库存>0可以预减库存
+        3. 添加简要的信息到Map并序列化，然后调用Kafka消费
+        4. Kafka消费这个秒杀消息,需要使用分布式事务,并生成完成的订单信息.
   
      
 ##  视频同步更新中 
