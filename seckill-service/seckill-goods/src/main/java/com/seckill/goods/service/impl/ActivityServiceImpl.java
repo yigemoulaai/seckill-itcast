@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:Activity业务层接口实现类
  * @Date  0:16
  *****/
@@ -275,7 +275,7 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setBegintime(TimeUtil.replaceDate1(TimeUtil.getTimes(0),seckillTime.getStarttime()));
         activity.setEndtime(TimeUtil.replaceDate1(TimeUtil.getTimes(0),seckillTime.getEndtime()));
 
-        //如果结束时间<开始时间，则重新计算结束时间
+        //如果结束时间 < 开始时间，则重新计算结束时间
         if(activity.getEndtime().getTime()<=activity.getBegintime().getTime()){
             activity.setEndtime(TimeUtil.replaceDate1(TimeUtil.addDateHour(TimeUtil.getTimes(0),24),seckillTime.getEndtime()));
         }

@@ -3,7 +3,7 @@ import com.seckill.goods.pojo.UndoLog;
 import tk.mybatis.mapper.common.Mapper;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:UndoLog的Dao
  * @Date  0:12
  *****/

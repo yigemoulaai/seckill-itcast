@@ -13,7 +13,6 @@
     <description>
         所有服务
     </description>
-
     <modules>
         <module>seckill-goods</module>
         <module>seckill-search</module>
@@ -25,7 +24,7 @@
         <module>seckill-page</module>
         <module>seckill-seata</module>
         <module>seckill-websocket</module>
-        <module>seckill-message</module>-->
+        <module>seckill-message</module>
     </modules>
 
     <dependencies>

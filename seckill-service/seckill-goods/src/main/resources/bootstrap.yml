@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://db-server:3306/seckill_goods?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: li19990424
+    password: xxxxx
   cloud:
     inetutils:
       preferred-networks: 125.81
@@ -30,7 +30,7 @@ spring:
     port: 6377
   elasticsearch:
     rest:
-      uris: ["http://111.229.8.28:9200"]
+      uris: ["http://db-server:9200"]
 logging:
   level:
     #root: debug开启dubug级别

@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckillproject
  * @Description: com.seckill.page.feign.SkuPageFeign
  ****/

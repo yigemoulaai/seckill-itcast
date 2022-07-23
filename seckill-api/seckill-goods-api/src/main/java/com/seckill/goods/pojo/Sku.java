@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:Sku构建
  * @Date  19:13
  *****/

@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.seckill.goods.feign.SkuFeign;
 import com.seckill.goods.pojo.Sku;
 import com.seckill.message.feign.MessageFeign;
-import com.seckill.order.config.RedissonDistributedLocker;
+import com.seckill.order.config.DistributedRedisLockImpl;
 import com.seckill.order.dao.OrderMapper;
 import com.seckill.order.pojo.Order;
 import com.seckill.order.service.OrderService;
@@ -14,7 +14,8 @@ import com.seckill.util.IdWorker;
 import com.seckill.util.Result;
 import com.seckill.util.StatusCode;
 import com.seckill.util.TimeUtil;
-import io.seata.spring.annotation.GlobalTransactional;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -30,7 +31,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:Order业务层接口实现类
  * @Date  0:16
  *****/
@@ -53,8 +54,7 @@ public class OrderServiceImpl implements OrderService {
     private KafkaTemplate kafkaTemplate;
 
     @Autowired
-    private RedissonDistributedLocker redissonDistributedLocker;
-
+    private Redisson redisson;
     @Autowired
     private MessageFeign messageFeign;
 
@@ -67,72 +67,37 @@ public class OrderServiceImpl implements OrderService {
     public void hotAdd(Map<String, String> orderMap) throws IOException {
         //消息封装对象
         Map<String,Object> messageMap = new HashMap<String,Object>();
-
         String username = orderMap.get("username");
         String id = orderMap.get("id");
-
         //Redis中对应的key
         String key="SKU_"+id;
         String lockkey="LOCKSKU_"+id;
         String userKey="USER"+username+"ID"+id;
-
+        RLock lock =redisson.getLock(lockkey);
         //如果key在redis缓存，则表示商品信息在Redis中进行操作
-        boolean bo =true;// redissonDistributedLocker.tryLock(lockkey, 10, 10, TimeUnit.MINUTES);
+        boolean bo = redisTemplate.hasKey(key);
         if(bo){
-            if(redisTemplate.hasKey(key)){
-                //获取商品数量
-                Integer num = Integer.parseInt(redisTemplate.boundHashOps(key).get("num").toString());
-
-                if(num<=0){
-                    //商品售罄通知
-                    messageMap.put("code",20001);
-                    messageMap.put("message","商品已售罄");
-                    messageFeign.send(username,JSON.toJSONString(messageMap));
-                    return;
-                }
-                Result<Sku> skuResult =skuFeign.findById(id);
-                Sku sku = skuResult.getData();
-
+            Result<Sku> skuResult =skuFeign.findById(id);
+            Sku sku = skuResult.getData();
                 //1.创建Order
-                Order order = new Order();
-                order.setTotalNum(1);
-                order.setCreateTime(new Date());
-                order.setUpdateTime(order.getCreateTime());
-                order.setId("No"+idWorker.nextId());
-                order.setOrderStatus("0");
-                order.setPayStatus("0");
-                order.setConsignStatus("0");
-                order.setSkuId(id);
-                order.setName(sku.getName());
-                order.setPrice(sku.getSeckillPrice()*order.getTotalNum());
-                orderMapper.insertSelective(order);
-
-                //2.Redis中对应的num递减
-                num--;
-                if(num==0){
-                    skuFeign.zero(id);
-                }
-
-                //2.清理用户排队信息
-                Map<String,Object> allMap = new HashMap<String,Object>();
-                allMap.put(userKey,0);
-                allMap.put("num",num);
-                redisTemplate.boundHashOps(key).putAll(allMap);
-                //3.记录用户购买过该商品,24小时后过期
-                redisTemplate.boundValueOps(userKey).set("");
-                redisTemplate.expire(userKey,1,TimeUnit.MINUTES);
-
+            Order order = new Order();
+            order.setTotalNum(1);
+            order.setCreateTime(new Date());
+            order.setUpdateTime(order.getCreateTime());
+            order.setId("No"+idWorker.nextId());
+            order.setOrderStatus("0");
+            order.setPayStatus("0");
+            order.setConsignStatus("0");
+            order.setSkuId(id);
+            order.setName(sku.getName());
+            order.setPrice(sku.getSeckillPrice()*order.getTotalNum());
+            orderMapper.insertSelective(order);
                 //抢单成功通知
-                messageMap.put("code",200);
-                messageMap.put("message","抢单成功！");
-                messageFeign.send(username,JSON.toJSONString(messageMap));
-            }
-
-            //释放锁
-            //redissonDistributedLocker.unLock(lockkey);
+            messageMap.put("code",200);
+            messageMap.put("message","抢单成功！");
+            messageFeign.send(username,JSON.toJSONString(messageMap));
             return;
         }
-
         //抢单失败通知
         messageMap.put("code",20001);
         messageMap.put("message","抢单失败！");
@@ -140,11 +105,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /***
-     * 添加订单
+     * 添加非热点的订单
      * @param order
      * @return
      */
-    @GlobalTransactional
+   // @GlobalTransactional
     @Override
     public int add(Order order) {
         String userKey="USER"+order.getUsername()+"ID"+order.getSkuId();
@@ -178,15 +143,13 @@ public class OrderServiceImpl implements OrderService {
                 Long increment = redisTemplate.boundHashOps(key).increment(userKey, 1);
                 if(increment==1){
                     //执行排队
-                    Map<String,String> queueMap = new HashMap<String,String>();
+                    Map<String, String> queueMap = new HashMap<String,String>();
                     queueMap.put("username",order.getUsername());
                     queueMap.put("id",order.getSkuId());
-                    kafkaTemplate.send("neworder", JSON.toJSONString(queueMap));
+                    kafkaTemplate.send("newOrder", JSON.toJSONString(queueMap));
                 }
                 return StatusCode.ORDER_QUEUE;
             }
-
-            //0
             return dcount.getCode();
         }
     }

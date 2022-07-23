@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.goods.task.statictask.ModifySeckillTimes
  ****/
 @Component

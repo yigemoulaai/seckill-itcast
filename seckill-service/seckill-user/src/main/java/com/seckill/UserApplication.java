@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import tk.mybatis.spring.annotation.MapperScan;
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckill
  * @Description: com.seckill.GoodsApplication
 

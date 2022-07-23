@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.order.config.KafkaOrderListener
  ****/
 @Component
@@ -23,8 +23,15 @@ public class KafkaOrderListener {
      * 订单消费
      * @param message
      */
-    @KafkaListener(topics = "neworder")
+    @KafkaListener(topics = "hotOrder")
     public void getMessage(String message) throws IOException {
+        //下单信息
+        Map<String,String> orderMap = JSON.parseObject(message,Map.class);
+        //下单
+        orderService.hotAdd(orderMap);
+    }
+    @KafkaListener(topics = "newOrder")
+    public void getNewMessage(String message) throws IOException {
         //下单信息
         Map<String,String> orderMap = JSON.parseObject(message,Map.class);
         //下单

@@ -5,7 +5,7 @@ import org.redisson.api.RLock;
 import java.util.concurrent.TimeUnit;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.order.config.DistributedLocker
  ****/
 public interface DistributedLocker {

@@ -3,7 +3,7 @@ import com.seckill.goods.pojo.Category;
 import tk.mybatis.mapper.common.Mapper;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:Category的Dao
  * @Date  0:12
  *****/

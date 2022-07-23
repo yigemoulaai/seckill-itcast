@@ -13,11 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-/*****
- * @Author: http://www.itheima.com
- * @Description: com.seckill.goods.task.dynamic.DynamicTask
-**/
 public class DynamicTask implements SimpleJob {
 
     @Autowired

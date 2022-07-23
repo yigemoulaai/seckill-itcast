@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckill
  * @Description: com.seckill.goods.config.RedissonConfig
  ****/

@@ -1,6 +1,6 @@
 package com.seckill.order.controller;
 
-import com.seckill.order.config.RedissonDistributedLocker;
+import com.seckill.order.config.DistributedRedisLockImpl;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,16 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/*****
- * @Author: http://www.itheima.com
- * @Description: com.seckill.order.controller.RedissonController
- ****/
 @RestController
 @RequestMapping(value = "/redisson")
 public class RedissonController {
 
     @Autowired
-    private RedissonDistributedLocker redissonDistributedLocker;
+    private DistributedRedisLockImpl redissonDistributedLocker;
 
     /***
      * 多个用户实现加锁操作，只允许有一个用户可以获取到对应锁

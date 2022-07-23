@@ -56,11 +56,11 @@
             <version>3.11.0</version>
         </dependency>
 
-        <dependency>
+       <!-- <dependency>
             <groupId>com.seckill</groupId>
             <artifactId>seckill-seata</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>com.seckill</groupId>

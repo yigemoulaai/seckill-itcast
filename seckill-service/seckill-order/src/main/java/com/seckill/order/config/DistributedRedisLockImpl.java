@@ -3,19 +3,21 @@ package com.seckill.order.config;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.order.config.RedissonDistributedLocker
  ****/
 @Component
-public class RedissonDistributedLocker implements DistributedLocker {
+public class DistributedRedisLockImpl implements DistributedLocker {
 
     @Autowired
-    private RedissonClient redissonClient;
+    @Qualifier("redisClient")
+    private RedissonClient redisClient;
 
     /***
      * 加锁,会一直循环加锁，直到拿到锁
@@ -24,7 +26,7 @@ public class RedissonDistributedLocker implements DistributedLocker {
      */
     @Override
     public RLock lock(String lockkey) {
-        RLock lock = redissonClient.getLock(lockkey);
+        RLock lock = redisClient.getLock(lockkey);
         lock.lock();
         return lock;
     }
@@ -36,7 +38,7 @@ public class RedissonDistributedLocker implements DistributedLocker {
      */
     @Override
     public RLock lock(String lockkey, long timeout) {
-        RLock lock = redissonClient.getLock(lockkey);
+        RLock lock = redisClient.getLock(lockkey);
         lock.lock(timeout,TimeUnit.SECONDS);
         return lock;
     }
@@ -67,7 +69,7 @@ public class RedissonDistributedLocker implements DistributedLocker {
      */
     @Override
     public void unLock(String lockkey) {
-        RLock lock = redissonClient.getLock(lockkey);
+        RLock lock = redisClient.getLock(lockkey);
         lock.unlock();
     }
 

@@ -6,7 +6,7 @@ import com.seckill.goods.pojo.Brand;
 import java.util.List;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:Brand业务层接口
  * @Date  0:16
  *****/

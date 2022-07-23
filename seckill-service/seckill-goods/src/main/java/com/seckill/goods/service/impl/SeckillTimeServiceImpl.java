@@ -13,7 +13,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.List;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:SeckillTime业务层接口实现类
  * @Date  0:16
  *****/

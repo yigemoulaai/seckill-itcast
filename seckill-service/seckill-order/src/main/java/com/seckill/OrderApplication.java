@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckill
  * @Description: com.seckill.GoodsApplication
 

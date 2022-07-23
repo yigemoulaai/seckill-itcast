@@ -1,6 +1,9 @@
 package com.seckill.order.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.seckill.goods.feign.SkuFeign;
+import com.seckill.order.config.DistributedRedisLockImpl;
 import com.seckill.order.pojo.Order;
 import com.seckill.order.pojo.OrderVo;
 import com.seckill.order.service.OrderService;
@@ -8,18 +11,20 @@ import com.seckill.util.IdWorker;
 import com.seckill.util.JwtTokenUtil;
 import com.seckill.util.Result;
 import com.seckill.util.StatusCode;
+import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
-/****
- * @Author:www.itheima.com
- * @Description:
- * @Date 0:18
- *****/
 
 @RestController
 @RequestMapping("/order")
@@ -28,11 +33,67 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private DistributedRedisLockImpl redLock;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
 
+    /* *
+     * @description: 热点秒杀控制器
+     * @params:
+     * @return:
+     */
+    @RequestMapping (value = "/hotSec/{id}")
+    public Result hotSec(@PathVariable(value = "id") String id, @RequestHeader(value = "Authorization") String authorization){
+        String username = null;
+        try {
+            //解析令牌
+            Map<String, Object> tokenMap = JwtTokenUtil.parseToken(authorization);
+            username =tokenMap.get("username").toString();
+        } catch (Exception e) {
+            return new Result(false, StatusCode.TOKEN_ERROR, "令牌无效！");
+        }
+        //当前的分布式锁
+        String key_lock = username + id + new Random().nextInt();
+        //商品ID
+        String goodsId = "SecNo"+idWorker.nextId();
+        //redis 秒杀商品名
+        String secGoodsId =  "SKU_"+id ;
+        RLock rLock = redLock.lock(key_lock);
+        //防止刷单锁
+        String nameLock = "USER"+username+"ID"+id;
+        Result result = null;
+        if(redisTemplate.hasKey(nameLock)){
+            return new Result(false, StatusCode.ERROR, "已经秒杀过该商品！");
+        }
+        try {
+            if(rLock != null){
+                int count = (int)redisTemplate.boundHashOps(secGoodsId).get("count");
+                if(count > 0 ){
+                    //这里应该使用pipeline
+                    //  redisTemplate.boundValueOps(nameLock).setIfAbsent("",100, TimeUnit.SECONDS);
+                    redisTemplate.boundHashOps(secGoodsId).increment("count", -1l);
+                    Map<String, String> map = new HashMap<>();
 
+                   // map.put("secId", goodsId);
+                    map.put("username", username);
+                    map.put("id", id);
+                    kafkaTemplate.send("hotOrder", JSON.toJSONString(map));
+                    result = new Result(true, StatusCode.OK, goodsId);
+                }
+                else{
+                    result = new Result(false, StatusCode.DECOUNT_NUM, "库存不足！");
+                }
+            }
+        }finally {
+            redLock.unLock(key_lock);
+        }
+        return result;
+    }
     /****
      * 添加订单
      */

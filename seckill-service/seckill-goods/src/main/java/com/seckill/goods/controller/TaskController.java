@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.goods.controller.TaskController
  ****/
 @RestController
@@ -82,7 +82,7 @@ public class TaskController {
             seckillTimeService.addTimes(initSeckillTimes());
 
             //1.查询所有时间段
-            List<SeckillTime> seckillTimes = seckillTimeService.findAllValidTimes();
+            List<SeckillTime> okTimes = seckillTimeService.findAllValidTimes();
 
             //查询前500个商品个商品
             PageInfo<Sku> skuPage = skuService.findPage(1, 500);
@@ -91,7 +91,7 @@ public class TaskController {
                 List<Sku> skus = skuPage.getList();
                 int index = 0;
 
-                for (SeckillTime seckillTime : seckillTimes) {
+                for (SeckillTime seckillTime : okTimes) {
                     //2.给每个时间段创建一个活动
                     Activity activity = activityService.createActivity(seckillTime);
 
@@ -102,7 +102,6 @@ public class TaskController {
             }
             System.out.println("=================OK!总条数：" + skuPage.getList().size());
         }
-
         return new Result(true, StatusCode.OK, "执行成功！");
     }
 

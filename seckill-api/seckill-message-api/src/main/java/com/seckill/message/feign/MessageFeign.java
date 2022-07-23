@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.message.feign.MessageFeign
  ****/
 @FeignClient(value = "seckill-message")

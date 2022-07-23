@@ -1,0 +1,27 @@
+server:
+  port: 18082
+spring:
+  application:
+    name: seckill-search
+  cloud:
+    inetutils:
+      preferred-networks: 125.81
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: nacos-server:8848
+      discovery:
+        #Nacos的注册地址
+        server-addr: nacos-server:8848
+  data:
+    elasticsearch:
+       host: es-server
+       port: 9200
+       cluster-name: my-application
+       cluster-nodes: es-server:9300
+#超时配置
+ribbon:
+  ReadTimeout: 3000000
+logging:
+  pattern:
+    console: "%msg%n"

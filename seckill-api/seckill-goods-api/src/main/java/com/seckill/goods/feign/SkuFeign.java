@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckill
  * @Description: com.seckill.goods.feign.SkuFeign
  ****/

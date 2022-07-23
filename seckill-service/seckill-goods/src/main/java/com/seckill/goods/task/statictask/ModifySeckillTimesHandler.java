@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.goods.task.statictask.ModifySeckillTimes
  ****/
 public class ModifySeckillTimesHandler implements SimpleJob {

@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:
  * @Date  0:18
  *****/

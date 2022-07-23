@@ -5,7 +5,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:SeckillTime的Dao
  * @Date  0:12
  *****/

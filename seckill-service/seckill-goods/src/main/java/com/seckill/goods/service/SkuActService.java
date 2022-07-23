@@ -8,7 +8,7 @@ import com.seckill.goods.pojo.SkuAct;
 import java.util.List;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:SkuAct业务层接口
  * @Date  0:16
  *****/

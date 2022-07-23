@@ -8,23 +8,20 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Project: seckillproject
  * @Description: com.seckill.search.pojo.SkuInfo
  * 和索引库对应的JavaBean
  ****/
 @Document(indexName = "goodsindex",type = "skuinfo")
 public class SkuInfo {
-
     //Sku相关的数据
     //商品id，同时也是商品编号
     @Id //唯一标识符,ES中对应的_id
     private String id;
-
     /***
-     * SKU名称
-     * type =FieldType.Text:指定当前name属性所对应的域的类型为Text类型，该类型支持分词支持创建索引
-     *       FiledType.Keyword:不分词
+     * type =FieldType.Text:指定当前name属性所对应的域的类型为Text类型，
+     * 该类型支持分词支持创建索引  FiledType.Keyword:不分词
      * searchAnalyzer="ik_smart":搜索所使用的分词器
      * analyzer = "ik_smart":添加索引所使用的分词器
      */

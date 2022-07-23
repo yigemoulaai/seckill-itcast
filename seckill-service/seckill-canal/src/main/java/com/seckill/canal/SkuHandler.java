@@ -12,7 +12,7 @@ import top.javatool.canal.client.annotation.CanalTable;
 import top.javatool.canal.client.handler.EntryHandler;
 
 /*****
- * @Author: http://www.itheima.com
+ * @Author: lichuang
  * @Description: com.seckill.canal.SkuHandler
  ****/
 @CanalTable(value = "tb_sku")
@@ -66,12 +66,12 @@ public class SkuHandler implements EntryHandler<Sku>{
 
         skuInfoFeign.modify(type,JSON.parseObject(JSON.toJSONString(after), SkuInfo.class));
     }
-
     /****
      * 删除数据监听
      * @param sku
      */
     @Override
     public void delete(Sku sku) {
+
     }
 }

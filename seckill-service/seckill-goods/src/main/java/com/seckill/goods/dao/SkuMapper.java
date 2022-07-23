@@ -8,11 +8,7 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-/****
- * @Author:www.itheima.com
- * @Description:Sku的Dao
- * @Date  0:12
- *****/
+
 public interface SkuMapper extends Mapper<Sku> {
 
     /**
@@ -48,7 +44,7 @@ public interface SkuMapper extends Mapper<Sku> {
      * 库存递减
      * 递减数量
      * 商品ID
-     * ------->控制超卖
+     * >控制超卖
      */
     @Update("update tb_sku set seckill_num=seckill_num-#{count} where id=#{id} and seckill_num>=#{count} and islock=1")
     int dcount(@Param("id")String id,@Param("count")Integer count);

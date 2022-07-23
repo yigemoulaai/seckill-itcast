@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /****
- * @Author:www.itheima.com
+ * @Author:lichaung
  * @Description:返回实体Bean
  * @Date  15:55
  *****/

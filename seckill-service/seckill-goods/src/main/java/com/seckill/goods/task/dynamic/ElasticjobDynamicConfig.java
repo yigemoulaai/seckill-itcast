@@ -17,8 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /*****
- * @Author: http://www.itheima.com
- * @Description: com.seckill.goods.task.dynamic.ElasticjobDynamicConfig
+
  * 动态定时任务案例配置
  ****/
 @Configuration
@@ -46,7 +45,6 @@ public class ElasticjobDynamicConfig {
     public ZookeeperRegistryCenter registryCenter(ZookeeperConfiguration zkConfig){
         return new ZookeeperRegistryCenter(zkConfig);
     }
-
     /****
      * 监听器
      */
@@ -54,13 +52,10 @@ public class ElasticjobDynamicConfig {
     public DynamicListener dynamicListener(){
         return new DynamicListener(10000L,100000L);
     }
-
     @Autowired
     private DynamicListener dynamicListener;
-
     @Autowired
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
-
     /****
      * 3.动态添加定时任务案例
      */
@@ -78,14 +73,11 @@ public class ElasticjobDynamicConfig {
         new SpringJobScheduler(instance,zookeeperRegistryCenter,
                 liteJobConfiguration,dynamicListener).init();
     }
-
-    //cron表达式格式
-    private static String cron="ss mm HH dd MM ? yyyy";
-
     /****
      * 时间转换成Cron表达式
-     * "1/5 * * * * ?";
+     * "1/5 * * * * ?"
      */
+    private static String cron="ss mm HH dd MM ? yyyy";
     public static String date2cron(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(cron);
         return simpleDateFormat.format(date);
