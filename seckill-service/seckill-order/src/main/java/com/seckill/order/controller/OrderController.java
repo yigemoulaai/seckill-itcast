@@ -58,7 +58,7 @@ public class OrderController {
             return new Result(false, StatusCode.TOKEN_ERROR, "令牌无效！");
         }
         //当前的分布式锁
-        String key_lock = username + id + new Random().nextInt();
+        String key_lock = username + id + idWorker.nextId();
         //商品ID
         String goodsId = "SecNo"+idWorker.nextId();
         //redis 秒杀商品名
@@ -71,7 +71,8 @@ public class OrderController {
             return new Result(false, StatusCode.ERROR, "已经秒杀过该商品！");
         }
         try {
-            if(rLock != null){
+            boolean hasLock = rLock.tryLock(1000, 2000, TimeUnit.MILLISECONDS);
+            if( hasLock ){
                 int count = (int)redisTemplate.boundHashOps(secGoodsId).get("count");
                 if(count > 0 ){
                     //这里应该使用pipeline
@@ -89,8 +90,10 @@ public class OrderController {
                     result = new Result(false, StatusCode.DECOUNT_NUM, "库存不足！");
                 }
             }
-        }finally {
-            redLock.unLock(key_lock);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            rLock.unlock();
         }
         return result;
     }

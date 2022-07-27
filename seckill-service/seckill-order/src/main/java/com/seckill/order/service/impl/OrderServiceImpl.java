@@ -55,8 +55,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private Redisson redisson;
-    @Autowired
-    private MessageFeign messageFeign;
+   /* @Autowired
+    private MessageFeign messageFeign;*/
 
     /****
      * 热点商品下单
@@ -95,13 +95,13 @@ public class OrderServiceImpl implements OrderService {
                 //抢单成功通知
             messageMap.put("code",200);
             messageMap.put("message","抢单成功！");
-            messageFeign.send(username,JSON.toJSONString(messageMap));
+          //  messageFeign.send(username,JSON.toJSONString(messageMap));
             return;
         }
         //抢单失败通知
         messageMap.put("code",20001);
         messageMap.put("message","抢单失败！");
-        messageFeign.send(username,JSON.toJSONString(messageMap));
+      //  messageFeign.send(username,JSON.toJSONString(messageMap));
     }
 
     /***
