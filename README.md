@@ -19,7 +19,7 @@ Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
     3.3 seckill-canal
    
     3.4 seckill-goods
-### 第二章内容 (seckill-Goods ) 
+### 第二章内容 (seckill-Goods 需要自己补充) 
    
 + L1 Sku处理逻辑  
     + M1 热点商品隔离 hotIsolation(List<String> ids)  
@@ -73,7 +73,7 @@ Elasticsearch 6.2.4, Kafka 2.12-2.5, redis 6.2.3, zookeeper 3.5.6
         + M2 新增一个Activity 
             1. 这里注入了分布式自增id(idWorker),作为唯一性id字段等,设置开始和结束时间  
             2. 插入数据库
-### 第三章内容(seckill-Order )  
+### 第三章内容(seckill-Order 文档完整 )  
 + L1 Sku处理逻辑   （修改日期 20220723）
     + M1 /hotSec/{id} 接受秒杀id
         1. 查询是否已经秒杀过该商品,若没有则生成分布式锁
