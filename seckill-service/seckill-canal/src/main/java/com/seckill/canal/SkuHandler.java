@@ -7,23 +7,29 @@ import com.seckill.search.feign.SkuInfoFeign;
 import com.seckill.search.pojo.SkuInfo;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import top.javatool.canal.client.annotation.CanalTable;
 import top.javatool.canal.client.handler.EntryHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /*****
- * @Author: lichuang
+ * @Author: Acer
  * @Description: com.seckill.canal.SkuHandler
  ****/
 @CanalTable(value = "tb_sku")
 @Component
 public class SkuHandler implements EntryHandler<Sku>{
 
-    @Autowired
-    private SkuInfoFeign skuInfoFeign;
+    /*@Autowired
+    private SkuInfoFeign skuInfoFeign;*/
 
+    //@Autowired
+    //private SkuPageFeign skuPageFeign;
     @Autowired
-    private SkuPageFeign skuPageFeign;
+    private RedisTemplate redisTemplate;
 
     /***
      * 增加数据监听
@@ -35,11 +41,11 @@ public class SkuHandler implements EntryHandler<Sku>{
         //status=2
         if(sku.getStatus().equals("2")){
             //同步索引
-            skuInfoFeign.modify(1, JSON.parseObject(JSON.toJSONString(sku), SkuInfo.class));
+            //skuInfoFeign.modify(1, JSON.parseObject(JSON.toJSONString(sku), SkuInfo.class));
         }
 
         //同步静态页
-        skuPageFeign.html(sku.getId());
+        //skuPageFeign.html(sku.getId());
     }
 
     /***
@@ -50,21 +56,29 @@ public class SkuHandler implements EntryHandler<Sku>{
     @SneakyThrows
     @Override
     public void update(Sku before, Sku after) {
-        System.out.println("update---"+after.getId());
         int type=1;
         if(after.getStatus().equals("2")){
             type=2;
-            //同步静态页
-            //skuPageFeign.html(after);
+            System.out.print("SKU_"+after.getId()+": ");
+            if(after.getSeckillPrice() != before.getSeckillPrice()){
+                System.out.print("价格变化前："+before.getSeckillPrice()+" 变化后："+after.getSeckillPrice()+" ");
+                redisTemplate.opsForHash().put("SKU_"+after.getId(), "price", after.getSeckillPrice());
+            }
+
+            if(after.getSeckillNum() != before.getSeckillNum()){
+                System.out.print("数量变化前："+before.getSeckillNum()+" 变化后："+after.getSeckillNum());
+                redisTemplate.opsForHash().put("SKU_"+after.getSeckillNum(), "count", after.getSeckillNum());
+            }
+            System.out.println();
         }else if(before.getStatus().equals("2") && after.getStatus().equals("1")){
             type=3;
             //同步静态页
             //skuPageFeign.delHtml(after.getId());
         }
         //同步静态页
-        skuPageFeign.html(after.getId());
+        //skuPageFeign.html(after.getId());
 
-        skuInfoFeign.modify(type,JSON.parseObject(JSON.toJSONString(after), SkuInfo.class));
+        //skuInfoFeign.modify(type,JSON.parseObject(JSON.toJSONString(after), SkuInfo.class));
     }
     /****
      * 删除数据监听

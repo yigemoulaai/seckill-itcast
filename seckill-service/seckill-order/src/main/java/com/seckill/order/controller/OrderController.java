@@ -2,8 +2,6 @@ package com.seckill.order.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.seckill.goods.feign.SkuFeign;
-import com.seckill.order.config.DistributedRedisLockImpl;
 import com.seckill.order.pojo.Order;
 import com.seckill.order.pojo.OrderVo;
 import com.seckill.order.service.OrderService;
@@ -12,17 +10,17 @@ import com.seckill.util.JwtTokenUtil;
 import com.seckill.util.Result;
 import com.seckill.util.StatusCode;
 import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
@@ -35,8 +33,10 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private IdWorker idWorker;
+
     @Autowired
-    private DistributedRedisLockImpl redLock;
+    @Qualifier("redisClient")
+    private RedissonClient client;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -58,21 +58,22 @@ public class OrderController {
             return new Result(false, StatusCode.TOKEN_ERROR, "令牌无效！");
         }
         //当前的分布式锁
-        String key_lock = username + id + idWorker.nextId();
+        String key_lock = username +"_"+ id;
         //商品ID
         String goodsId = "SecNo"+idWorker.nextId();
         //redis 秒杀商品名
         String secGoodsId =  "SKU_"+id ;
-        RLock rLock = redLock.lock(key_lock);
+        RLock rLock = client.getLock(key_lock);
         //防止刷单锁
         String nameLock = "USER"+username+"ID"+id;
         Result result = null;
         if(redisTemplate.hasKey(nameLock)){
             return new Result(false, StatusCode.ERROR, "已经秒杀过该商品！");
         }
-        try {
-            boolean hasLock = rLock.tryLock(1000, 2000, TimeUnit.MILLISECONDS);
-            if( hasLock ){
+       // try{
+                //boolean res = rLock.tryLock();
+           // if(res){
+                rLock.lock();
                 int count = (int)redisTemplate.boundHashOps(secGoodsId).get("count");
                 if(count > 0 ){
                     //这里应该使用pipeline
@@ -80,7 +81,7 @@ public class OrderController {
                     redisTemplate.boundHashOps(secGoodsId).increment("count", -1l);
                     Map<String, String> map = new HashMap<>();
 
-                   // map.put("secId", goodsId);
+                    // map.put("secId", goodsId);
                     map.put("username", username);
                     map.put("id", id);
                     kafkaTemplate.send("hotOrder", JSON.toJSONString(map));
@@ -89,12 +90,13 @@ public class OrderController {
                 else{
                     result = new Result(false, StatusCode.DECOUNT_NUM, "库存不足！");
                 }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            rLock.unlock();
-        }
+                if(rLock.isHeldByCurrentThread())
+                    rLock.unlock();
+            //}
+           // }
+         /*catch (InterruptedException e) {
+                e.printStackTrace();
+           // }*/
         return result;
     }
     /****
@@ -118,6 +120,7 @@ public class OrderController {
         order.setUpdateTime(order.getCreateTime());
         order.setUsername(username);
         order.setTotalNum(1);
+
         //添加订单
         int code = orderService.add(order);
         switch (code) {

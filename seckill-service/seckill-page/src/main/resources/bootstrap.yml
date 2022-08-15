@@ -38,5 +38,5 @@ ribbon:
   ConnectTimeout: 30000
 
 #静态页位置
-#htmlPath: D:/page/html
-htmlPath: /usr/local/server/web/html/web/items
+htmlPath: E:/page/html
+#htmlPath: /usr/local/server/web/html/web/items
